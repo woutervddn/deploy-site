@@ -25,7 +25,7 @@ You need the following packages installed:
 ## Installation
 
 - Point your prefered domain to the IP of your server
-- First clone this repo: `git clone git@github.com:woutervddn/deploy-site.git`
+- First clone this repo: `git clone https://github.com/woutervddn/deploy-site.git`
 - Then `cd deploy-site` and `./tools/init-server.sh`
 - Check if you see the empty "silence is golden" portal on your hostname
 
