@@ -48,4 +48,5 @@ fi
 
 # Reload proxy
 cd "${DIR}/../proxy/"
-docker-compose up -d
+./init-letsencrypt.sh $domain
+#docker-compose up -d
