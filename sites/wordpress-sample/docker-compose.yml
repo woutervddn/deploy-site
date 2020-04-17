@@ -1,0 +1,49 @@
+version: '3'
+services:
+  wordpress_web:
+    depends_on:
+      - wordpress_db
+    image: wordpress:latest
+    restart: unless-stopped
+    volumes:
+      - ./data/wp-content:/var/www/html/wp-content
+    environment:
+      WORDPRESS_DB_HOST: wordpress_db:3306
+      WORDPRESS_DB_PASSWORD: root
+      WORDPRESS_DB_NAME: wp
+      WORDPRESS_TABLE_PREFIX: wp_
+    expose:
+      - "80"
+    networks:
+      - app-network
+
+  wordpress_db:
+    image: mariadb:latest
+    restart: unless-stopped
+    volumes:
+      - ./data/db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wp
+      MYSQL_USER: wp
+      MYSQL_PASSWORD: wp
+    networks:
+      - app-network
+
+  wordpress_phpmyadmin:
+    depends_on:
+      - wordpress_db
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    expose:
+      - 80
+    environment:
+      PMA_HOST: wordpress_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USERNAME: root
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
