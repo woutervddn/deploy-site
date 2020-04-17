@@ -22,11 +22,15 @@ You need the following packages installed:
 - docker-compose
 - git
 
+This installation also assumes that you are allowed to run docker without being root.
+If not, use this to fix: `sudo gpasswd -a $USER docker`.
+You need to log out and back in for this to take effect.
+
 ## Installation
 
 - Point your prefered domain to the IP of your server
 - First clone this repo: `git clone https://github.com/woutervddn/deploy-site.git`
-- Then `cd deploy-site` and `./tools/init-server.sh`
+- Then `cd deploy-site` and `sudo ./tools/init-server.sh`
 - Check if you see the empty "silence is golden" portal on your hostname
 
 ## Test usage
