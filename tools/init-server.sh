@@ -43,4 +43,4 @@ fi
 
 # Spin Up
 cd "${DIR}/../proxy/"
-./init-letsencrypt.sh
+./init-letsencrypt.sh $domain
