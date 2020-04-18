@@ -37,6 +37,9 @@ if [ ! "$(docker ps -q -f name=${site_container_name})" ]; then
 
     # via standard docker
     #docker run -d --name <name> my-docker-image
+
+    # FIX PERMISSIONS
+    sudo chmod -r www-data:www-data "${DIR}/../sites/${domain}/"
 else
    echo "${domain} already running, skipping!"
 fi
