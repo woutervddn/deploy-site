@@ -20,8 +20,11 @@ for d in ${DIR}/../sites/*/ ; do
     docker-compose down
 
     portal_container_name="${domain//.}_nginx_1"
-    sudo "${DIR}/update-hosts.sh" remove $portal_container_name
+    sudo "${DIR}/update-hosts.sh" remove $domain
     portal_container_name="${domain//.}_wordpress_web_1"
-    sudo "${DIR}/update-hosts.sh" remove $portal_container_name
+    sudo "${DIR}/update-hosts.sh" remove $domain
+    phpmyadmin_container_name="${domain//.}_wordpress_phpmyadmin_1"
+    sudo "${DIR}/update-hosts.sh" remove $phpmyadmin_container_name
+
 
 done
