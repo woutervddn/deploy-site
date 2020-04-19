@@ -39,7 +39,11 @@ if [ ! "$(docker ps -q -f name=${site_container_name})" ]; then
     #docker run -d --name <name> my-docker-image
 
     # FIX PERMISSIONS
-    sudo chmod -r www-data:www-data "${DIR}/../sites/${domain}/"
+    # sudo chown -R www-data:www-data "${DIR}/../sites/${domain}/data/wp-content/" # DOES NOT WORK
+    sudo chown -R 33:33 "${DIR}/../sites/${domain}/data/wp-content/" # IS SUPPOSED TO WORK; I can upload now but not read...
+    sudo find "${DIR}/../sites/${domain}/data/wp-content/" -type d -exec chmod 775 {} \;
+    sudo find "${DIR}/../sites/${domain}/data/wp-content/" -type f -exec chmod 664 {} \;
+
 else
    echo "${domain} already running, skipping!"
 fi
