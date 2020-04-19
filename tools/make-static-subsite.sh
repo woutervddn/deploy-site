@@ -24,10 +24,11 @@ if [ ! "$(docker ps -q -f name=${site_container_name})" ]; then
     echo "Starting a new container"
     # via compose
     cd "${DIR}/../sites/${domain}/"
+    sed -i "s/${searchdomain}/${domain}/g" docker-compose.yml
     docker-compose up -d
-    portalIP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $site_container_name)
-    sudo "${DIR}/update-hosts.sh" remove $domain
-    sudo "${DIR}/update-hosts.sh" add $domain $portalIP
+    # portalIP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $site_container_name)
+    # sudo "${DIR}/update-hosts.sh" remove $domain
+    # sudo "${DIR}/update-hosts.sh" add $domain $portalIP
 
     # via standard docker
     #docker run -d --name <name> my-docker-image

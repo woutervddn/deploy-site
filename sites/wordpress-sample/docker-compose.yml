@@ -4,6 +4,7 @@ services:
     depends_on:
       - wordpress_db
     image: wordpress:latest
+    container_name: example.org
     restart: unless-stopped
     volumes:
       - ./data/wp-content:/var/www/html/wp-content

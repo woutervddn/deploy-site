@@ -2,6 +2,7 @@ version: '3'
 services:
   nginx:
     image: nginx:1.15-alpine
+    container_name: example.org
     expose:
       - "80"
     restart: always
@@ -12,5 +13,4 @@ services:
       - proxy
 networks:
   proxy:
-    driver: bridge
     external: true
