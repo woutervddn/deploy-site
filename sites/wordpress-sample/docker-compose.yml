@@ -50,3 +50,4 @@ networks:
     driver: bridge
   proxy:
     driver: bridge
+    external: true
