@@ -8,3 +8,8 @@ services:
     volumes:
       - ./data/nginx:/etc/nginx/conf.d
       - ./data/www:/var/www
+    networks:
+      - proxy
+networks:
+  proxy:
+    driver: bridge

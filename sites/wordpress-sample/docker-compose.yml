@@ -16,6 +16,7 @@ services:
       - "80"
     networks:
       - app-network
+      - proxy
 
   wordpress_db:
     image: mariadb:latest
@@ -46,4 +47,6 @@ services:
 
 networks:
   app-network:
+    driver: bridge
+  proxy:
     driver: bridge
