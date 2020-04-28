@@ -49,6 +49,5 @@ services:
 networks:
   app-network:
     driver: bridge
-  networks:
-    proxy:
-      external: true
+  proxy:
+    external: true
