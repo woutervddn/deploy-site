@@ -24,10 +24,11 @@ if [ ! "$(docker ps -q -f name=${site_container_name})" ]; then
     echo "Starting a new container"
     # via compose
     cd "${DIR}/../sites/${domain}/"
+    sed -i "s/${searchdomain}/${domain}/g" docker-compose.yml
     docker-compose up -d
-    portalIP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $site_container_name)
-    sudo "${DIR}/update-hosts.sh" remove $site_container_name
-    sudo "${DIR}/update-hosts.sh" add $site_container_name $portalIP
+    # portalIP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $site_container_name)
+    # sudo "${DIR}/update-hosts.sh" remove $domain
+    # sudo "${DIR}/update-hosts.sh" add $domain $portalIP
 
     # via standard docker
     #docker run -d --name <name> my-docker-image
@@ -39,9 +40,7 @@ fi
 cd "${DIR}/../proxy/"
 if [ ! -f "$APPCONFFILE" ]; then
     echo "./proxy/$APPCONFFILE does not exist"
-    sed "s/${searchdomain}/${domain}/g" $APPCONFSAMPLE > ${APPCONFFILE}.tmp
-    sed "s/docker_host_web/${site_container_name}/g" ${APPCONFFILE}.tmp > $APPCONFFILE
-    rm ${APPCONFFILE}.tmp
+    sed "s/${searchdomain}/${domain}/g" $APPCONFSAMPLE > ${APPCONFFILE}
 else
     echo "./proxy/$APPCONFFILE already exists, skipping creation of new one!"
 fi

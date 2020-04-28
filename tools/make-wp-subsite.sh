@@ -25,10 +25,11 @@ if [ ! "$(docker ps -q -f name=${site_container_name})" ]; then
     echo "Starting a new container"
     # via compose
     cd "${DIR}/../sites/${domain}/"
+    sed -i "s/${searchdomain}/${domain}/g" docker-compose.yml
     docker-compose up -d
-    siteIP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $site_container_name)
-    sudo "${DIR}/update-hosts.sh" remove $site_container_name
-    sudo "${DIR}/update-hosts.sh" add $site_container_name $siteIP
+    # siteIP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $site_container_name)
+    # sudo "${DIR}/update-hosts.sh" remove $domain
+    # sudo "${DIR}/update-hosts.sh" add $domain $siteIP
 
     phpmyadminIP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $phpmyadmin_container_name)
 
@@ -37,6 +38,13 @@ if [ ! "$(docker ps -q -f name=${site_container_name})" ]; then
 
     # via standard docker
     #docker run -d --name <name> my-docker-image
+
+    # FIX PERMISSIONS
+    # sudo chown -R www-data:www-data "${DIR}/../sites/${domain}/data/wp-content/" # DOES NOT WORK
+    sudo chown -R 33:33 "${DIR}/../sites/${domain}/data/wp-content/" # IS SUPPOSED TO WORK; I can upload now but not read...
+    sudo find "${DIR}/../sites/${domain}/data/wp-content/" -type d -exec chmod 775 {} \;
+    sudo find "${DIR}/../sites/${domain}/data/wp-content/" -type f -exec chmod 664 {} \;
+
 else
    echo "${domain} already running, skipping!"
 fi
@@ -45,9 +53,7 @@ fi
 cd "${DIR}/../proxy/"
 if [ ! -f "$APPCONFFILE" ]; then
     echo "./proxy/$APPCONFFILE does not exist"
-    sed "s/${searchdomain}/${domain}/g" $APPCONFSAMPLE > ${APPCONFFILE}.tmp
-    sed "s/docker_host_web/${site_container_name}/g" ${APPCONFFILE}.tmp > $APPCONFFILE
-    rm ${APPCONFFILE}.tmp
+    sed "s/${searchdomain}/${domain}/g" $APPCONFSAMPLE > ${APPCONFFILE}
 else
     echo "./proxy/$APPCONFFILE already exists, skipping creation of new one!"
 fi
@@ -56,4 +62,3 @@ fi
 cd "${DIR}/../proxy/"
 ./init-letsencrypt.sh $domain
 #docker-compose up -d
-
